@@ -1,0 +1,313 @@
+@import "tailwindcss";
+
+/* ==================================================================
+   Design tokens
+   ------------------------------------------------------------------
+   Dr. Pundir is an Ayurvedacharya (B.A.M.S.) practising as a general
+   physician, so the palette deliberately avoids the cold corporate blue
+   of a corporate hospital chain. It is built from three colours:
+
+     • vaidya  — a healing green, taken from the tulsi/neem end of the
+                 spectrum rather than a neon "medical" green.
+     • saffron — the marigold-and-kesar warmth of the framed सम्मान पत्र
+                 and the deity portrait on the clinic wall.
+     • bark    — a deep, slightly green-shifted charcoal for dark
+                 sections, so the greens sit on it without vibrating.
+
+   This is a one-doctor clinic, not a hospital; the visual language aims
+   for "trusted neighbourhood vaidya", not "tertiary care campus".
+   ================================================================== */
+
+@theme {
+  /* Deep, green-shifted charcoal — hero, footer, headings. */
+  --color-bark-50: #f5f7f5;
+  --color-bark-100: #e7ede8;
+  --color-bark-200: #ccd9ce;
+  --color-bark-300: #a3bba7;
+  --color-bark-400: #6f9276;
+  --color-bark-500: #4d7455;
+  --color-bark-600: #395c41;
+  --color-bark-700: #2d4935;
+  --color-bark-800: #213628;
+  --color-bark-900: #16261c;
+  --color-bark-950: #0b170f;
+
+  /* Primary — healing green. */
+  --color-vaidya-50: #f0fbf4;
+  --color-vaidya-100: #d8f5e3;
+  --color-vaidya-200: #b2eaca;
+  --color-vaidya-300: #7fd8a9;
+  --color-vaidya-400: #47bd83;
+  --color-vaidya-500: #22a167;
+  --color-vaidya-600: #158153;
+  --color-vaidya-700: #126745;
+  --color-vaidya-800: #125238;
+  --color-vaidya-900: #104430;
+
+  /* Accent — marigold / kesar. */
+  --color-saffron-50: #fff8ec;
+  --color-saffron-100: #ffefd3;
+  --color-saffron-200: #ffdaa5;
+  --color-saffron-300: #ffbf6d;
+  --color-saffron-400: #ff9a32;
+  --color-saffron-500: #ff7d0a;
+  --color-saffron-600: #f05f00;
+  --color-saffron-700: #c74604;
+  --color-saffron-800: #9e370b;
+  --color-saffron-900: #7f2f0c;
+
+  /* Clay — used sparingly for the "call now" urgency. */
+  --color-clay-500: #e0483c;
+  --color-clay-600: #cb3327;
+  --color-clay-700: #a82a21;
+
+  /* WhatsApp brand green, kept literal so the button is recognisable. */
+  --color-whatsapp: #25d366;
+  --color-whatsapp-dark: #1da851;
+
+  --color-paper: #fcfdfb;
+
+  /**
+   * The Devanagari face sits in the *default* stack rather than behind a
+   * :lang() rule. The page is genuinely bilingual — the wordmark and several
+   * labels render Hindi even when the interface is set to English — and
+   * Plus Jakarta Sans carries no Devanagari glyphs, so gating it would show
+   * tofu boxes. Latin still resolves to Jakarta; Devanagari falls through to
+   * Noto automatically, which is what font fallback is for.
+   */
+  --font-sans: var(--font-jakarta), var(--font-devanagari), ui-sans-serif,
+    system-ui, sans-serif;
+  --font-hindi: var(--font-devanagari), var(--font-jakarta), sans-serif;
+
+  --radius-4xl: 2rem;
+  --radius-5xl: 2.75rem;
+
+  --shadow-lift: 0 1px 2px rgb(11 23 15 / 0.04), 0 12px 32px -8px rgb(11 23 15 / 0.12);
+  --shadow-lifted: 0 2px 4px rgb(11 23 15 / 0.06), 0 28px 56px -16px rgb(11 23 15 / 0.22);
+
+  --animate-drift-slow: drift 26s ease-in-out infinite;
+  --animate-drift: drift 18s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-sheen: sheen 3.4s ease-in-out infinite;
+  --animate-marquee: marquee 40s linear infinite;
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33%      { transform: translate3d(3%, -5%, 0) scale(1.06); }
+  66%      { transform: translate3d(-3%, 4%, 0) scale(0.96); }
+}
+
+@keyframes pulse-ring {
+  0%   { transform: scale(0.85); opacity: 0.7; }
+  70%  { transform: scale(1.6);  opacity: 0; }
+  100% { transform: scale(1.6);  opacity: 0; }
+}
+
+@keyframes sheen {
+  0%        { transform: translateX(-120%) skewX(-18deg); }
+  60%, 100% { transform: translateX(220%) skewX(-18deg); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ==================================================================
+   Scroll reveal
+   ------------------------------------------------------------------
+   See the note in components/ui/reveal.tsx for why this is CSS rather
+   than a JS observer. The short version: the resting state must be
+   *visible*, so that a visitor whose JavaScript never arrives still gets
+   the phone number. The animation is pure enhancement on top.
+   ================================================================== */
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--reveal-x, 0), var(--reveal-y, 1.6rem), 0)
+      scale(var(--reveal-scale, 1));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    [data-reveal] {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      /* `both` fill is what makes the first screen safe: anything already
+         past its entry range at load resolves to the `to` state rather than
+         sitting at `from`. The --reveal-i offset staggers grouped items. */
+      animation-range: entry calc(6% + var(--reveal-i, 0) * 4%) entry
+        calc(64% + var(--reveal-i, 0) * 4%);
+    }
+
+    /* Cascade for grouped children, so no index has to be passed through JSX. */
+    [data-reveal-group] > *:nth-child(1) { --reveal-i: 0; }
+    [data-reveal-group] > *:nth-child(2) { --reveal-i: 1; }
+    [data-reveal-group] > *:nth-child(3) { --reveal-i: 2; }
+    [data-reveal-group] > *:nth-child(4) { --reveal-i: 3; }
+    [data-reveal-group] > *:nth-child(5) { --reveal-i: 4; }
+    [data-reveal-group] > *:nth-child(6) { --reveal-i: 5; }
+    [data-reveal-group] > *:nth-child(7) { --reveal-i: 6; }
+    [data-reveal-group] > *:nth-child(n + 8) { --reveal-i: 7; }
+  }
+}
+
+/* ==================================================================
+   Base
+   ================================================================== */
+
+@layer base {
+  * {
+    /* Anchor navigation has to clear the sticky header. */
+    scroll-margin-top: 6.5rem;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-bark-900);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* Stops the drifting background orbs creating a horizontal scrollbar. */
+    overflow-x: hidden;
+  }
+
+  :lang(hi) {
+    font-family: var(--font-hindi);
+  }
+
+  /* Devanagari matras sit above and below the baseline, so running text needs
+     more room than Latin does. Headings are excluded — they set their own
+     tight leading and this rule opens an visible gap between heading lines. */
+  :lang(hi) p,
+  :lang(hi) li,
+  :lang(hi) address,
+  :lang(hi) dd,
+  :lang(hi) blockquote {
+    line-height: 1.75;
+  }
+
+  h1, h2, h3, h4 {
+    font-weight: 700;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--color-vaidya-200);
+    color: var(--color-bark-950);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-vaidya-500);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Honour the OS setting. Some of this site's readers are unwell; nobody
+     should be made to feel worse by a decorative animation. */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+/* ==================================================================
+   Utilities
+   ================================================================== */
+
+/** Page gutter that stays comfortable from 320px to ultrawide. */
+@utility container-page {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 78rem;
+  padding-inline: 1.25rem;
+  @media (width >= 40rem) { padding-inline: 2rem; }
+  @media (width >= 64rem) { padding-inline: 2.5rem; }
+}
+
+/** Frosted card used across the light sections. */
+@utility card-glass {
+  background-color: color-mix(in oklab, white 84%, transparent);
+  backdrop-filter: blur(14px) saturate(1.4);
+  border: 1px solid color-mix(in oklab, var(--color-bark-200) 70%, transparent);
+}
+
+@utility card-glass-dark {
+  background-color: color-mix(in oklab, var(--color-bark-900) 55%, transparent);
+  backdrop-filter: blur(16px) saturate(1.3);
+  border: 1px solid color-mix(in oklab, white 12%, transparent);
+}
+
+/** Gradient text for the accent word in a heading. */
+@utility text-gradient {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-vaidya-700),
+    var(--color-vaidya-500) 50%,
+    var(--color-vaidya-400)
+  );
+  background-clip: text;
+  color: transparent;
+  /* Descenders clip without a little breathing room. */
+  padding-bottom: 0.06em;
+}
+
+@utility text-gradient-warm {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-saffron-600),
+    var(--color-saffron-400) 55%,
+    var(--color-saffron-300)
+  );
+  background-clip: text;
+  color: transparent;
+  padding-bottom: 0.06em;
+}
+
+/** Faint grid behind dark sections. */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, white 6%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, white 6%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+@utility bg-grid-light {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--color-bark-950) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--color-bark-950) 5%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+/** Fades an element towards its horizontal edges — for the marquee. */
+@utility mask-edges {
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+/** Hides scrollbars on horizontal chip rails without losing scrollability. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar { display: none; }
+}
