@@ -10,7 +10,16 @@
  * Filling `sessions` in doctor.ts is all that is needed to switch it over.
  */
 
-import { CalendarX2, Clock, IndianRupee, MapPin, Navigation, Phone } from "lucide-react";
+import Link from "next/link";
+import {
+  CalendarX2,
+  Clock,
+  IndianRupee,
+  MapPin,
+  Navigation,
+  Phone,
+  Ticket,
+} from "lucide-react";
 import { consultation, contact, mapsHref, telHref } from "@/lib/doctor";
 import { copy } from "@/lib/copy";
 import { useLang } from "@/components/i18n/language-provider";
@@ -181,6 +190,32 @@ export function Clinic() {
                   </li>
                 ))}
               </ul>
+            </div>
+          </Reveal>
+
+          {/* ---------------- book a token ---------------- */}
+          <Reveal direction="up" delay={0.22} className="lg:col-span-3">
+            <div className="flex flex-col items-start gap-5 rounded-3xl bg-bark-950 p-7 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+              <div>
+                <p className="text-[0.68rem] font-bold tracking-[0.16em] text-vaidya-300 uppercase">
+                  {t(copy.bookingEyebrow)}
+                </p>
+                <p className="mt-2 text-xl leading-snug font-extrabold text-white sm:text-2xl">
+                  {t(copy.bookingLead)}{" "}
+                  <span className="text-gradient-warm">{t(copy.bookingAccent)}</span>
+                </p>
+                <p className="mt-2 max-w-xl text-sm leading-relaxed text-bark-300">
+                  {t(copy.bookingIntro)}
+                </p>
+              </div>
+
+              <Link
+                href="/book"
+                className="inline-flex shrink-0 items-center gap-2.5 rounded-2xl bg-vaidya-500 px-6 py-4 text-sm font-bold text-white transition hover:bg-vaidya-400 sm:text-base"
+              >
+                <Ticket className="size-5" strokeWidth={2.2} aria-hidden />
+                {t(copy.bookToken)}
+              </Link>
             </div>
           </Reveal>
         </div>

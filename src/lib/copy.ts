@@ -127,6 +127,85 @@ export const copy = {
     "इस वेबसाइट की जानकारी केवल सामान्य जागरूकता के लिए है और किसी व्यक्तिगत परामर्श, जाँच या दवा की पर्ची का विकल्प नहीं है। कृपया केवल इस पृष्ठ के आधार पर कोई दवा शुरू या बंद न करें।",
   ),
 
+  /* --- token booking --- */
+  bookToken: t("Book Token", "टोकन बुक करें"),
+  tokenLabel: t("Token", "टोकन"),
+  bookingEyebrow: t("Online token", "ऑनलाइन टोकन"),
+  bookingLead: t("Get your token", "अपना टोकन लें"),
+  bookingAccent: t("before you come", "आने से पहले"),
+  bookingIntro: t(
+    "Pick a day and a time, give the patient's name and mobile number, and you will get a token number. Show it at the counter — the ₹50 slip is still made there.",
+    "दिन और समय चुनें, मरीज़ का नाम और मोबाइल नंबर दें, और आपको टोकन नंबर मिल जाएगा। काउंटर पर दिखा दें — ₹50 का पर्चा वहीं बनेगा।",
+  ),
+
+  stepDate: t("Day", "दिन"),
+  stepSlot: t("Time", "समय"),
+  stepDetails: t("Details", "विवरण"),
+
+  chooseDay: t("Choose a day", "दिन चुनें"),
+  chooseTime: t("Choose a time", "समय चुनें"),
+  patientDetails: t("Patient details", "मरीज़ का विवरण"),
+  slotsFree: t("free", "खाली"),
+  noSlotsLeft: t(
+    "No time is left on this day. Please pick another day.",
+    "इस दिन कोई समय खाली नहीं है। कृपया दूसरा दिन चुनें।",
+  ),
+  clinicClosedThatDay: t(
+    "The clinic is closed on this day.",
+    "इस दिन क्लीनिक बंद रहता है।",
+  ),
+  slotTaken: t("Taken", "बुक"),
+  slotPassed: t("Passed", "समय बीत गया"),
+
+  fieldName: t("Patient's full name", "मरीज़ का पूरा नाम"),
+  fieldPhone: t("Mobile number", "मोबाइल नंबर"),
+  fieldAge: t("Age", "उम्र"),
+  fieldGender: t("Gender", "लिंग"),
+  fieldReason: t("What is the problem? (optional)", "क्या तकलीफ़ है? (वैकल्पिक)"),
+  genderMale: t("Male", "पुरुष"),
+  genderFemale: t("Female", "महिला"),
+  genderOther: t("Other", "अन्य"),
+  optional: t("optional", "वैकल्पिक"),
+
+  confirmBooking: t("Confirm token", "टोकन पक्का करें"),
+  booking: t("Booking…", "बुक हो रहा है…"),
+  back: t("Back", "पीछे"),
+  somethingWrong: t(
+    "Something went wrong. Please try again, or call the clinic.",
+    "कुछ गड़बड़ हो गई। कृपया दोबारा कोशिश करें, या क्लीनिक पर कॉल करें।",
+  ),
+  loading: t("Loading…", "लोड हो रहा है…"),
+
+  tokenBooked: t("Your token is booked", "आपका टोकन बुक हो गया"),
+  yourTokenNumber: t("Token number", "टोकन नंबर"),
+  bookingCode: t("Booking code", "बुकिंग कोड"),
+  reportBy: t("Please arrive by", "कृपया पहुँचें"),
+  patientsAhead: t("patients ahead of you", "आपसे पहले मरीज़"),
+  saveThisCode: t(
+    "Keep the booking code — it is needed to cancel.",
+    "बुकिंग कोड संभाल कर रखें — रद्द करने के लिए ज़रूरी है।",
+  ),
+  sendToWhatsapp: t("Send to my WhatsApp", "मेरे व्हाट्सएप पर भेजें"),
+  bookAnother: t("Book another token", "दूसरा टोकन बुक करें"),
+  feeAtCounter: t(
+    "Consultation fee ₹50, paid at the counter.",
+    "परामर्श शुल्क ₹50, काउंटर पर देय।",
+  ),
+
+  scheduleProvisional: t(
+    "Please note: these consultation timings are provisional and are still being confirmed with the clinic. Your token number and queue position are correct, but do ring before you travel.",
+    "ध्यान दें: ये परामर्श समय अस्थायी हैं और क्लीनिक से पुष्टि की जा रही है। आपका टोकन नंबर और क्रम सही है, फिर भी आने से पहले एक बार कॉल कर लें।",
+  ),
+
+  cancelHeading: t("Cancel a token", "टोकन रद्द करें"),
+  cancelIntro: t(
+    "Enter the booking code and the mobile number it was booked with.",
+    "बुकिंग कोड और जिस मोबाइल नंबर से बुक किया था, वह दर्ज करें।",
+  ),
+  cancelButton: t("Cancel token", "टोकन रद्द करें"),
+  cancelling: t("Cancelling…", "रद्द हो रहा है…"),
+  cancelled: t("That token has been cancelled.", "वह टोकन रद्द कर दिया गया है।"),
+
   /* --- footer --- */
   footerNav: t("Sections", "अनुभाग"),
   footerReach: t("Reach the clinic", "क्लीनिक तक पहुँचें"),

@@ -3,9 +3,7 @@ import { Plus_Jakarta_Sans, Noto_Sans_Devanagari } from "next/font/google";
 import "./globals.css";
 
 import { LanguageProvider } from "@/components/i18n/language-provider";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { MobileActionBar } from "@/components/layout/mobile-action-bar";
+import { SiteChrome } from "@/components/layout/site-chrome";
 import {
   consultation,
   contact,
@@ -188,12 +186,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData()) }}
         />
         <LanguageProvider>
-          <Header />
-          <main id="main" className="pb-20 sm:pb-0">
-            {children}
-          </main>
-          <Footer />
-          <MobileActionBar />
+          <SiteChrome>{children}</SiteChrome>
         </LanguageProvider>
       </body>
     </html>
