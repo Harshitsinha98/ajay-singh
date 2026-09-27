@@ -438,13 +438,18 @@ export const gallery: Array<{
 /* Navigation                                                          */
 /* ================================================================== */
 
+/**
+ * Root-relative rather than bare fragments (`/#about`, not `#about`). The header
+ * and footer are rendered on /book and /admin too, where a bare `#about` would
+ * resolve against a page that has no such section and silently do nothing.
+ */
 export const navLinks: Array<{ href: string; label: Bilingual }> = [
-  { href: "#about", label: t("About", "परिचय") },
-  { href: "#expertise", label: t("Treatment", "उपचार") },
-  { href: "#experience", label: t("Experience", "अनुभव") },
-  { href: "#clinic", label: t("Clinic", "क्लीनिक") },
-  { href: "#recognition", label: t("Recognition", "सम्मान") },
-  { href: "#contact", label: t("Contact", "संपर्क") },
+  { href: "/#about", label: t("About", "परिचय") },
+  { href: "/#expertise", label: t("Treatment", "उपचार") },
+  { href: "/#experience", label: t("Experience", "अनुभव") },
+  { href: "/#clinic", label: t("Clinic", "क्लीनिक") },
+  { href: "/#recognition", label: t("Recognition", "सम्मान") },
+  { href: "/#contact", label: t("Contact", "संपर्क") },
 ];
 
 /* ================================================================== */

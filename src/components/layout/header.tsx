@@ -12,9 +12,11 @@
  *    good share of visitors are older patients on small phones.
  */
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useScroll, useMotionValueEvent } from "motion/react";
-import { Languages, Menu, MessageCircle, Phone, X } from "lucide-react";
+import { Languages, Menu, MessageCircle, Phone, Ticket, X } from "lucide-react";
 import { contact, doctor, navLinks, telHref, whatsappHref } from "@/lib/doctor";
 import { copy } from "@/lib/copy";
 import { useLang } from "@/components/i18n/language-provider";
@@ -25,14 +27,18 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
+  const pathname = usePathname();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrolled(latest > 24);
   });
 
-  /** The page opens on a dark hero, so at the very top the header can sit
-   *  transparent with light text. Once scrolled it needs its own surface. */
-  const overDarkHero = !scrolled;
+  /**
+   * Only the home page opens on the dark hero, so only there can the header sit
+   * transparent with light text. On /book and /admin the page starts pale, where
+   * white-on-white nav links are effectively invisible.
+   */
+  const overDarkHero = pathname === "/" && !scrolled;
 
   // Lock body scroll while the sheet is open, and restore it exactly.
   useEffect(() => {
@@ -104,7 +110,7 @@ export function Header() {
           }`}
         >
           <div className="container-page flex items-center justify-between gap-4 py-3">
-            <a href="#top" className="flex min-w-0 items-center gap-3" aria-label={doctor.name.en}>
+            <Link href="/" className="flex min-w-0 items-center gap-3" aria-label={doctor.name.en}>
               <LogoMark className="size-11" />
               <LogoWordmark
                 nameHi={doctor.shortName.hi}
@@ -112,7 +118,7 @@ export function Header() {
                 sub={t(copy.brandSub)}
                 tone={overDarkHero ? "dark" : "light"}
               />
-            </a>
+            </Link>
 
             <nav className="hidden items-center gap-1 lg:flex">
               {navLinks.map((link) => (
@@ -147,11 +153,23 @@ export function Header() {
 
               <a
                 href={telHref()}
-                className="hidden items-center gap-2 rounded-xl bg-vaidya-600 px-4 py-2.5 text-sm font-bold text-white shadow-lift transition hover:bg-vaidya-700 sm:inline-flex"
+                className={`hidden size-10 items-center justify-center rounded-xl border transition sm:inline-flex ${
+                  overDarkHero
+                    ? "border-white/25 text-white hover:bg-white/10"
+                    : "border-bark-200 text-bark-700 hover:border-vaidya-300 hover:bg-vaidya-50"
+                }`}
+                aria-label={`${t(copy.callNow)} ${contact.phoneDisplay}`}
               >
                 <Phone className="size-4" strokeWidth={2.2} aria-hidden />
-                {t(copy.callNow)}
               </a>
+
+              <Link
+                href="/book"
+                className="hidden items-center gap-2 rounded-xl bg-vaidya-600 px-4 py-2.5 text-sm font-bold text-white shadow-lift transition hover:bg-vaidya-700 sm:inline-flex"
+              >
+                <Ticket className="size-4" strokeWidth={2.2} aria-hidden />
+                {t(copy.bookToken)}
+              </Link>
 
               <button
                 type="button"
@@ -243,6 +261,14 @@ export function Header() {
               </nav>
 
               <div className="space-y-2.5 border-t border-bark-100 p-4">
+                <Link
+                  href="/book"
+                  onClick={() => setOpen(false)}
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-bark-950 px-4 py-3.5 text-sm font-bold text-white"
+                >
+                  <Ticket className="size-4" strokeWidth={2.1} aria-hidden />
+                  {t(copy.bookToken)}
+                </Link>
                 <a
                   href={telHref()}
                   className="flex w-full items-center justify-center gap-2 rounded-2xl bg-vaidya-600 px-4 py-3.5 text-sm font-bold text-white"

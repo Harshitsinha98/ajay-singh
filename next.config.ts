@@ -1,11 +1,14 @@
 import type { NextConfig } from "next";
 
-/**
- * This is a purely informational site — no database, no API routes, no patient
- * data. That keeps the config small: image formats, a few hardening headers,
- * and nothing else.
- */
 const nextConfig: NextConfig = {
+  /**
+   * better-sqlite3 is a native addon that resolves its `.node` binary at
+   * runtime. The bundler cannot follow that, so it must stay an external
+   * require handled by Node itself. It is only ever loaded on the local/VPS
+   * path — serverless deployments go through @libsql/client instead.
+   */
+  serverExternalPackages: ["better-sqlite3"],
+
   images: {
     // Every photograph is the doctor's own, served from /public. No remote
     // hosts are configured, so there is no open image-proxy surface.
@@ -26,6 +29,11 @@ const nextConfig: NextConfig = {
             value: "camera=(), microphone=(), geolocation=()",
           },
         ],
+      },
+      {
+        // Patient data — never let a proxy or a browser cache an API response.
+        source: "/api/:path*",
+        headers: [{ key: "Cache-Control", value: "no-store, max-age=0" }],
       },
     ];
   },

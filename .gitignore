@@ -20,6 +20,13 @@ yarn-error.log*
 .env*
 !.env.example
 
+# Local SQLite database and its WAL sidecars. Patient data — must never be
+# committed, and on a VPS this directory is the thing to back up.
+/data
+*.db
+*.db-shm
+*.db-wal
+
 .vercel
 
 *.tsbuildinfo

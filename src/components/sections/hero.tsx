@@ -9,7 +9,8 @@
  * two buttons are the two things patients actually do.
  */
 
-import { MessageCircle, Phone, ShieldCheck } from "lucide-react";
+import Link from "next/link";
+import { MessageCircle, Phone, ShieldCheck, Ticket } from "lucide-react";
 import {
   contact,
   doctor,
@@ -77,9 +78,17 @@ export function Hero() {
             {/* ---------------- actions ---------------- */}
             <Reveal direction="up" delay={0.28}>
               <div className="mt-9 flex flex-wrap gap-3">
+                <Link
+                  href="/book"
+                  className="inline-flex items-center gap-2.5 rounded-2xl bg-vaidya-500 px-6 py-3.5 text-sm font-bold text-white shadow-[0_10px_30px_-10px_rgba(34,161,103,0.8)] transition hover:bg-vaidya-400 sm:text-base"
+                >
+                  <Ticket className="size-4.5" strokeWidth={2.3} aria-hidden />
+                  {t(copy.bookToken)}
+                </Link>
+
                 <a
                   href={telHref()}
-                  className="inline-flex items-center gap-2.5 rounded-2xl bg-vaidya-500 px-6 py-3.5 text-sm font-bold text-white shadow-[0_10px_30px_-10px_rgba(34,161,103,0.8)] transition hover:bg-vaidya-400 sm:text-base"
+                  className="inline-flex items-center gap-2.5 rounded-2xl border border-white/25 bg-white/5 px-6 py-3.5 text-sm font-bold text-white backdrop-blur transition hover:border-white/50 hover:bg-white/10 sm:text-base"
                 >
                   <Phone className="size-4.5" strokeWidth={2.3} aria-hidden />
                   {contact.phoneDisplay}
