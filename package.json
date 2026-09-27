@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "tsc --noEmit",
     "test": "tsx scripts/test-booking.mts",
-    "test:booking": "tsx scripts/test-booking.mts"
+    "test:booking": "tsx scripts/test-booking.mts",
+    "setup:turso": "bash scripts/setup-turso.sh",
+    "verify:booking": "tsx scripts/verify-booking.mts"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",
