@@ -81,29 +81,49 @@ work there. Instead of silently losing bookings, the app detects this and refuse
 them, telling patients to phone the clinic. Handing someone a real-looking token number
 that quietly evaporates is worse than an honest "please call".
 
-So on Vercel you need [Turso](https://turso.tech) — hosted SQLite over HTTP, whose free
-tier is far more than one clinic will use:
+So on Vercel you need [Turso](https://turso.tech) — hosted SQLite over HTTP. It is **free**
+(the free tier is far more than one clinic will ever use) and **reliable** (it is a managed,
+replicated service, not a file you have to babysit). This is the recommended way to enable
+booking in production.
+
+**Enable it in three steps:**
 
 ```bash
-turso db create ajay-pundir-clinic
-turso db show   ajay-pundir-clinic --url
-turso db tokens create ajay-pundir-clinic
+# 1. Install the Turso CLI, then log in (free, no card):
+curl -sSfL https://get.tur.so/install.sh | bash
+turso auth login
+
+# 2. Create the database and print the two values to copy:
+npm run setup:turso
 ```
 
-Then in **Vercel → Settings → Environment Variables** add:
+`npm run setup:turso` creates the database (if it does not exist), makes an auth token, and
+prints exactly what to paste. Then:
 
-| Variable | Value |
-| --- | --- |
-| `TURSO_DATABASE_URL` | `libsql://ajay-pundir-clinic-….turso.io` |
-| `TURSO_AUTH_TOKEN` | the token from the command above |
-| `ADMIN_PASSCODE` | a long passcode for the counter |
+```
+# 3. In Vercel → Settings → Environment Variables, add:
+TURSO_DATABASE_URL   libsql://ajay-pundir-clinic-….turso.io
+TURSO_AUTH_TOKEN     (the token it printed)
+ADMIN_PASSCODE       (a long passcode for the /admin counter screen)
+```
 
 Setting `TURSO_DATABASE_URL` switches storage automatically — there is no other flag. The
 schema is created on first connection, so **there is no migration to run**. Redeploy and
 booking is live.
 
-The `/admin` screen shows which backend is in use, so staff can confirm at a glance that
-bookings are durable.
+**Then confirm it actually works** — do not assume, check:
+
+```bash
+npm run verify:booking -- https://your-domain.vercel.app
+```
+
+This hits the live site and books → looks up → cancels a throwaway test token, leaving the
+register clean, and fails loudly with the exact fix if storage is not configured. There is
+also a machine-readable check at **`GET /api/health`** (returns HTTP 503 when booking is
+down) that an uptime monitor can watch.
+
+The `/admin` screen also shows which backend is in use, so staff can confirm at a glance
+that bookings are durable.
 
 ## The front desk — `/admin`
 
